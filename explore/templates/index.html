@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Explore</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
+    <style>
+      h1, h2 {
+        font-family: 'EB Garamond', serif;
+      }
+      body {
+        font-family: 'Lora', serif;
+      }
+      body {
+        margin-left: auto;
+        margin-right: auto;
+        width: 650px;
+      }
+      .table-box {
+        height: 300px;
+        overflow: scroll;
+        font-size: 80%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>{{ dataset_name }}</h1>
+    <p>{{ summary }}</p>
+    {% for id, table in zip(ids, tables) %}
+        <h2>{{id}}</h2>
+        <div id="{{id}}"></div>
+        <div class="table-box">
+          {{ table | safe }}
+        </div>
+    {% endfor %}
+  </body>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script type="text/javascript">
+
+    var graphs = {{ graphs | safe }}.map(x => JSON.parse(x));
+    var ids = {{ ids | safe }};
+
+    for(var i in graphs) {
+        Plotly.plot(ids[i], // the ID of the div, created above
+                    graphs[i].data,
+                    graphs[i].layout || {});
+    }
+
+  </script>
+</html>
